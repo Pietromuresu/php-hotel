@@ -40,6 +40,14 @@
 
     ];
 
+    $withParking= [];
+
+    foreach($hotels as $hotel)
+      if ($hotel['parking'] === true) 
+        $withParking[] = $hotel;
+  
+  $filter = $_POST['filter'] ?? 'all';
+  $selected = $filter;
 ?>
 
 
@@ -53,6 +61,19 @@
   <title>PHP Hotels</title>
 </head>
 <body>
+<div class="container my-5">
+
+  <form action="index.php" method="POST">
+    <select name="filter">
+      <option value="all" selected>All</option>
+      <option value="withParking">Parking Available</option>
+    </select>
+    <button type="submit" value="send" class="ms-3 btn btn-dark">Filter</button>
+  </form>
+  
+</div>
+<!-- Viene mostrato di default perchè non abbiamo valorizzato "$selected" tramite la select -->
+<?php if($selected == 'all'){?>
 <div class="container">
 
   <table class="table">
@@ -66,6 +87,8 @@
       </tr>
     </thead>
     <tbody>
+      <!-- Mostro tutti gli hotel presenti nell'array "$hotels" -->
+
       <?php foreach($hotels as $hotel){?>
         <tr>
           <th scope="row">
@@ -98,5 +121,51 @@
     </table>
   </div>
 
+<!-- Viene mostrato solo se abbiamo valorizzato selected tramite la select -->
+
+<?php }else{?>
+  <div class="container">
+
+  <table class="table">
+    <thead class="w-75">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Parking</th>
+        <th scope="col">Vote</th>
+        <th scope="col">Distance to center</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Mostro tutti gli hotel che hanno un parcheggio -->
+      <?php foreach($withParking as $hotel){?>
+        <tr>
+          <th scope="row">
+            <?php echo $hotel['name'] ?>
+          </th>
+          <td>
+            <?php echo $hotel['description'] ?>
+          </td>
+
+          <?php if( $hotel['parking'] == 1){ ?>
+          <td>
+            True
+          </td>
+          
+          <?php } ?>
+
+          <td>
+            <?php echo $hotel['vote'] ?>
+          </td>
+          <td>
+            <?php echo $hotel['distance_to_center'] ?> km
+          </td>
+        </tr>
+        <?php } ?>
+        
+      </tbody>
+    </table>
+  </div>
+<?php }?>
 </body>
 </html>
